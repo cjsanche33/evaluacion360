@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluacion 360 Lideres - Genomma Lab</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--navy:#0F1F3D;--navy2:#1A3260;--teal:#00A99D;--teal2:#E6F7F6;--red:#EF4444;--bg:#F8FAFC;--bdr:#E2E8F0;--txt:#1E293B;--txt2:#475569;}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
+.view{display:none;}.view.active{display:block;}
+.hdr{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:14px 24px;position:sticky;top:0;z-index:200;}
+.hdr-i{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:15px;font-weight:700;color:#fff;}
+.logo b{color:var(--teal);}
+.hbtns{display:flex;gap:8px;}
+.hbtn{padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid rgba(255,255,255,.3);background:transparent;color:#fff;}
+.hbtn.act{background:var(--teal);border-color:var(--teal);}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 60px;}
+.card{background:#fff;border-radius:12px;border:1px solid var(--bdr);padding:20px;margin-bottom:16px;}
+.card-t{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:12px;}
+.hero{text-align:center;padding:24px 0 16px;}
+.badge{display:inline-block;background:var(--navy);color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:8px;}
+.hero h1{font-size:22px;font-weight:700;color:var(--navy);}
+.hero p{font-size:13px;color:var(--txt2);margin-top:4px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:480px){.g2{grid-template-columns:1fr;}}
+.fl label{display:block;font-size:11px;font-weight:600;color:var(--txt2);margin-bottom:3px;text-transform:uppercase;}
+.fl input,.fl select{width:100%;padding:9px 10px;border:1.5px solid var(--bdr);border-radius:7px;font-size:13px;color:var(--txt);}
+.fl input:focus,.fl select:focus{outline:none;border-color:var(--teal);}
+.codebox{background:var(--teal2);border:2px solid var(--teal);border-radius:10px;padding:14px;text-align:center;margin:12px 0;}
+.codelbl{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--teal);margin-bottom:4px;}
+.codeval{font-size:32px;font-weight:700;color:var(--navy);letter-spacing:.15em;font-family:monospace;}
+.codenote{font-size:12px;color:var(--txt2);margin-top:4px;}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;}
+@media(max-width:460px){.roles{grid-template-columns:1fr;}}
+.rc{background:#fff;border:2px solid var(--bdr);border-radius:10px;padding:14px;cursor:pointer;transition:border-color .2s;text-align:center;}
+.rc:hover,.rc.sel{border-color:var(--teal);background:var(--teal2);}
+.ri{font-size:24px;margin-bottom:4px;}
+.rt{font-size:13px;font-weight:700;color:var(--navy);}
+.rd{font-size:11px;color:var(--txt2);margin-top:2px;}
+.rnote{background:#FFF8E7;border:1px solid #FDE68A;border-radius:8px;padding:9px 12px;font-size:12px;color:#92400E;margin:8px 0;display:none;}
+.centry{background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:9px;padding:12px;margin:8px 0;}
+.centry label{display:block;font-size:12px;font-weight:600;color:#166534;margin-bottom:4px;}
+.centry input{width:100%;padding:9px 12px;border:1.5px solid #86EFAC;border-radius:7px;font-size:18px;font-weight:700;letter-spacing:.12em;text-align:center;color:var(--navy);}
+.centry input:focus{outline:none;border-color:var(--teal);}
+.btnp{background:linear-gradient(135deg,var(--teal),#00877C);color:#fff;border:none;padding:12px 28px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:4px;}
+.btnp:disabled{opacity:.4;cursor:not-allowed;}
+.btns{background:#fff;color:var(--navy);border:2px solid var(--navy);padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
+.fhdr{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:16px 20px;margin-bottom:16px;border-radius:12px;}
+.fbadge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:4px;}
+.fhdr h2{font-size:15px;font-weight:700;}
+.fhdr p{font-size:12px;color:rgba(255,255,255,.6);}
+.fcode{display:inline-block;background:rgba(0,169,157,.25);border:1px solid rgba(0,169,157,.4);color:#5EEAD4;font-size:12px;font-weight:700;letter-spacing:.1em;padding:2px 9px;border-radius:20px;margin-top:5px;}
+.pbar-wrap{margin-top:9px;background:rgba(255,255,255,.15);border-radius:99px;height:5px;}
+.pbar{height:5px;border-radius:99px;background:var(--teal);transition:width .4s;}
+.plbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;}
+.scalebar{display:flex;background:#fff;border:1px solid var(--bdr);border-radius:8px;overflow:hidden;margin-bottom:14px;}
+.scalebar span{flex:1;text-align:center;font-size:11px;padding:6px 2px;border-right:1px solid var(--bdr);color:var(--txt2);}
+.scalebar span:last-child{border-right:none;}
+.scalebar b{display:block;font-size:13px;font-weight:700;color:var(--navy);}
+.scard{background:#fff;border-radius:11px;border:1px solid var(--bdr);margin-bottom:14px;overflow:hidden;}
+.shdr{display:flex;align-items:center;gap:9px;padding:13px 16px 10px;border-bottom:1px solid var(--bdr);background:#F8FAFC;}
+.cn{width:30px;height:30px;border-radius:7px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+.cname{font-weight:700;font-size:13px;color:var(--navy);}
+.cdesc{font-size:11px;color:var(--txt2);margin-top:2px;line-height:1.4;}
+.cpill{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--bdr);color:var(--txt2);white-space:nowrap;margin-left:auto;}
+.irow{display:flex;align-items:center;gap:8px;padding:9px 16px;border-bottom:1px solid #F1F5F9;}
+.irow:last-child{border-bottom:none;}
+.inum{width:17px;flex-shrink:0;font-size:11px;color:var(--txt2);}
+.itext{flex:1;font-size:13px;line-height:1.5;}
+.rg{display:flex;gap:4px;flex-shrink:0;}
+.rb{width:31px;height:31px;border-radius:6px;border:2px solid var(--bdr);background:#fff;font-size:11px;font-weight:700;color:var(--txt2);cursor:pointer;}
+.rb:hover{border-color:var(--teal);color:var(--teal);background:var(--teal2);}
+.rb.s1{border-color:#EF4444;background:#FEF2F2;color:#EF4444;}
+.rb.s2{border-color:#F59E0B;background:#FFFBEB;color:#D97706;}
+.rb.s3{border-color:#3B82F6;background:#EFF6FF;color:#2563EB;}
+.rb.s4{border-color:#10B981;background:#ECFDF5;color:#10B981;}
+.rb.sna{border-color:#94A3B8;background:#F1F5F9;color:#64748B;}
+.vmsg{font-size:12px;color:var(--red);margin-top:6px;display:none;text-align:center;}
+.toast{position:fixed;bottom:20px;right:20px;padding:11px 18px;border-radius:9px;font-size:13px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.25);z-index:999;transform:translateY(70px);opacity:0;transition:all .3s;color:#fff;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{background:#065F46;}
+.toast.err{background:#991B1B;}
+.ld{position:fixed;inset:0;background:rgba(15,31,61,.5);z-index:500;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+.ld.on{display:flex;}
+.spin{width:40px;height:40px;border:4px solid rgba(255,255,255,.2);border-top-color:var(--teal);border-radius:50%;animation:sp .8s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.ld p{color:#fff;font-size:13px;font-weight:600;}
+.rhero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:12px;padding:24px;margin-bottom:16px;text-align:center;}
+.rhero h2{font-size:18px;font-weight:700;}
+.sbig{font-size:48px;font-weight:700;color:var(--teal);line-height:1;margin:10px 0 3px;}
+.tabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;}
+.tb{padding:6px 12px;border-radius:7px;border:2px solid var(--bdr);background:#fff;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--txt2);}
+.tb.a{border-color:var(--teal);background:var(--teal2);color:var(--teal);}
+.rcn{background:#fff;border-radius:12px;border:1px solid var(--bdr);padding:18px;margin-bottom:14px;}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;}
+@media(max-width:520px){.cg{grid-template-columns:1fr;}}
+.cr{background:#fff;border-radius:10px;border:1px solid var(--bdr);padding:11px;}
+.crt{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.crn{font-size:12px;font-weight:600;color:var(--navy);}
+.cra{font-size:15px;font-weight:700;}
+.crb{height:5px;background:var(--bdr);border-radius:99px;overflow:hidden;margin-bottom:3px;}
+.crf{height:100%;border-radius:99px;transition:width 1s;}
+.crl{font-size:11px;font-weight:600;}
+.stw{overflow-x:auto;}
+.st{width:100%;border-collapse:collapse;font-size:12px;}
+.st th{text-align:left;padding:7px 8px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--txt2);border-bottom:2px solid var(--bdr);}
+.st td{padding:7px 8px;border-bottom:1px solid #F1F5F9;}
+.sc{display:inline-block;padding:2px 6px;border-radius:99px;font-size:10px;font-weight:700;}
+.oa{background:var(--bg);border-radius:7px;padding:9px;margin-bottom:7px;border-left:3px solid var(--teal);}
+.oal{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--txt2);display:block;margin-bottom:2px;}
+.oa p{font-size:13px;line-height:1.5;}
+.slist{display:flex;flex-direction:column;gap:5px;margin-bottom:8px;}
+.si{display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-radius:7px;padding:7px 11px;}
+.sil{display:flex;align-items:center;gap:7px;}
+.sd{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sn{font-size:13px;font-weight:600;}
+.sr{font-size:11px;color:var(--txt2);}
+.ss{font-size:13px;font-weight:700;}
+.arow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
+.alog{max-width:360px;margin:40px auto 0;text-align:center;}
+.alog .lk{font-size:40px;margin-bottom:12px;}
+.alog h2{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.alog p{font-size:13px;color:var(--txt2);margin-bottom:18px;}
+.alog input{width:100%;padding:9px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-size:13px;text-align:center;color:var(--navy);margin-bottom:9px;}
+.aerr{font-size:12px;color:var(--red);margin-bottom:7px;display:none;}
+.ast{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px;}
+@media(max-width:560px){.ast{grid-template-columns:1fr 1fr;}}
+.asc{background:#fff;border-radius:11px;border:1px solid var(--bdr);padding:13px;text-align:center;}
+.asn{font-size:24px;font-weight:700;color:var(--navy);}
+.asl{font-size:11px;color:var(--txt2);margin-top:2px;}
+.ltw{overflow-x:auto;}
+.lt{width:100%;border-collapse:collapse;font-size:12px;}
+.lt th{text-align:left;padding:7px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--txt2);border-bottom:2px solid var(--bdr);white-space:nowrap;}
+.lt td{padding:7px 10px;border-bottom:1px solid #F1F5F9;vertical-align:middle;}
+.lt tr:hover td{background:#FAFBFF;}
+.lc{font-weight:700;color:var(--teal);letter-spacing:.07em;font-family:monospace;}
+.pm{height:5px;background:var(--bdr);border-radius:99px;overflow:hidden;margin-top:3px;width:90px;}
+.pmf{height:100%;border-radius:99px;}
+.bv{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:var(--navy);color:#fff;}
+.hrow{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.hl{width:120px;flex-shrink:0;font-size:11px;color:var(--txt2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.hcs{display:flex;gap:3px;flex:1;}
+.hc{flex:1;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;min-width:22px;}
+.hh{flex:1;font-size:9px;font-weight:700;color:var(--txt2);text-align:center;min-width:22px;}
+.dp{background:#fff;border-radius:12px;border:1px solid var(--bdr);padding:18px;margin-bottom:16px;display:none;}
+.c-ref{color:#10B981;}.c-sol{color:#2563EB;}.c-des{color:#D97706;}.c-ini{color:#EF4444;}
+.b-ref{background:#10B981;}.b-sol{background:#3B82F6;}.b-des{background:#F59E0B;}.b-ini{background:#EF4444;}
+.bg-ref{background:#10B981;}.bg-sol{background:#3B82F6;}.bg-des{background:#F59E0B;}.bg-ini{background:#EF4444;}
+</style>
+</head>
+<body>
+<div class="ld" id="ld"><div class="spin"></div><p id="lmsg">Procesando...</p></div>
+<div class="toast" id="toast"></div>
+
+<!-- LANDING -->
+<div id="vL" class="view active">
+<div class="hdr"><div class="hdr-i"><div class="logo">Genomma Lab &middot; <b>360&deg;</b></div><div class="hbtns"><button class="hbtn act" id="btnEval">Evaluacion</button><button class="hbtn" id="btnAdmin">Admin</button></div></div></div>
+<div class="wrap">
+<div class="hero"><div class="badge">Ciclo 1 &middot; Confidencial</div><h1>Evaluacion 360&deg; de Lideres</h1><p>Cuestionario de Competencias &mdash; Nivel 2A y 2B</p></div>
+<div class="card">
+<div class="card-t">Datos del lider evaluado</div>
+<div class="g2" style="margin-bottom:10px">
+<div class="fl"><label>Nombre del lider</label><input id="lN" placeholder="Nombre completo"></div>
+<div class="fl"><label>Nivel</label><select id="lNv"><option value="">Seleccionar...</option><option value="2A">Nivel 2A</option><option value="2B">Nivel 2B</option></select></div>
+<div class="fl"><label>Cargo</label><input id="lC" placeholder="Cargo"></div>
+<div class="fl"><label>Area / Gerencia</label><input id="lA" placeholder="Area"></div>
+</div>
+<div id="cb" style="display:none"><div class="codebox"><div class="codelbl">Codigo del lider &mdash; comparte con evaluadores</div><div class="codeval" id="cv">---</div><div class="codenote">Este codigo vincula todas las evaluaciones en SharePoint</div></div></div>
+</div>
+<div class="card">
+<div class="card-t">Cual es tu rol en esta evaluacion?</div>
+<div class="roles">
+<div class="rc" id="rc_auto" data-role="auto"><div class="ri">&#x1F9FF;</div><div class="rt">Autoevaluacion</div><div class="rd">Soy el lider evaluado</div></div>
+<div class="rc" id="rc_jefe" data-role="jefe"><div class="ri">&#x1F454;</div><div class="rt">Jefe Inmediato</div><div class="rd">Soy el jefe directo</div></div>
+<div class="rc" id="rc_par" data-role="par"><div class="ri">&#x1F91D;</div><div class="rt">Par / Colega</div><div class="rd">Soy par de este lider</div></div>
+<div class="rc" id="rc_colab" data-role="colab"><div class="ri">&#x2B06;&#xFE0F;</div><div class="rt">Colaborador Directo</div><div class="rd">Reporto a este lider</div></div>
+</div>
+<div class="rnote" id="rn"></div>
+<div id="ce" style="display:none">
+<div class="centry"><label>Ingresa el codigo del lider que vas a evaluar</label><input id="ci" maxlength="8" placeholder="ej. AR-247"></div>
+<div class="fl" style="margin-top:8px"><label>Tu nombre</label><input id="en" placeholder="Tu nombre completo"></div>
+</div>
+</div>
+<button class="btnp" id="bs" disabled>Iniciar evaluacion</button>
+</div>
+</div>
+
+<!-- FORM -->
+<div id="vF" class="view">
+<div class="hdr"><div class="hdr-i"><div class="logo">Genomma Lab &middot; <b>360&deg;</b></div><div class="hbtns"><button class="hbtn" id="btnSalir">Salir</button></div></div></div>
+<div class="wrap">
+<div class="fhdr">
+<div class="fbadge" id="fb"></div><h2 id="ft"></h2><p id="fs"></p>
+<div class="fcode" id="fc"></div>
+<div class="pbar-wrap"><div class="pbar" id="pb" style="width:0%"></div></div>
+<div class="plbl" id="pl">0 de 28 indicadores respondidos</div>
+</div>
+<div class="scalebar"><span><b>1</b>Inicial</span><span><b>2</b>En desarrollo</span><span><b>3</b>Solido</span><span><b>4</b>Referente</span><span><b>NA</b>No observado</span></div>
+<div id="cc"></div>
+<div class="card">
+<div class="card-t">Preguntas cualitativas</div>
+<div style="margin-bottom:10px"><label id="q1" style="display:block;font-size:13px;font-weight:500;margin-bottom:4px"></label><textarea id="o1" style="width:100%;border:1.5px solid var(--bdr);border-radius:7px;padding:8px;font-size:13px;resize:vertical;min-height:65px;color:var(--txt);font-family:Arial,sans-serif" placeholder="Describe comportamientos destacados..."></textarea></div>
+<div><label id="q2" style="display:block;font-size:13px;font-weight:500;margin-bottom:4px"></label><textarea id="o2" style="width:100%;border:1.5px solid var(--bdr);border-radius:7px;padding:8px;font-size:13px;resize:vertical;min-height:65px;color:var(--txt);font-family:Arial,sans-serif" placeholder="Describe oportunidades de mejora..."></textarea></div>
+</div>
+<div style="text-align:center"><button class="btnp" style="width:auto" id="btnEnviar">Enviar evaluacion</button><p class="vmsg" id="vm">Responde todos los indicadores antes de continuar.</p></div>
+</div>
+</div>
+
+<!-- RESULTS -->
+<div id="vR" class="view">
+<div class="hdr"><div class="hdr-i"><div class="logo">Genomma Lab &middot; <b>360&deg;</b></div><div class="hbtns"><button class="hbtn" id="btnOtra">+ Otra evaluacion</button><button class="hbtn" id="btnNuevo">Nuevo</button></div></div></div>
+<div class="wrap">
+<div class="rhero" id="rh"></div>
+<div class="card"><div class="card-t">Evaluaciones en esta sesion</div><div class="slist" id="sl"></div><button class="btns" style="width:100%;margin-top:5px" id="btnOtra2">+ Agregar otra evaluacion</button></div>
+<div class="tabs" id="tr"></div>
+<div class="rcn"><div class="card-t" style="margin-bottom:12px">Perfil de competencias</div><canvas id="rc" width="420" height="340"></canvas></div>
+<div class="cg" id="cg"></div>
+<div class="card" id="sc" style="display:none"><div class="card-t">Comparativa por fuente</div><div class="stw"><table class="st" id="stbl"></table></div></div>
+<div class="card" id="oc" style="display:none"><div class="card-t">Reflexiones cualitativas</div><div id="ob"></div></div>
+<div class="arow"><button class="btns" id="btnPrint">Imprimir / PDF</button><button class="btnp" style="width:auto" id="btnNuevo2">Nueva evaluacion</button></div>
+</div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="vAL" class="view">
+<div class="hdr"><div class="hdr-i"><div class="logo">Genomma Lab &middot; <b>Admin</b></div><div class="hbtns"><button class="hbtn" id="btnVolverAdmin">Volver</button></div></div></div>
+<div class="wrap"><div class="alog">
+<div class="lk">&#x1F512;</div><h2>Panel de Administrador</h2>
+<p>Acceso exclusivo para RH. Datos en tiempo real desde SharePoint.</p>
+<input type="password" id="ap" placeholder="Contrasena">
+<p class="aerr" id="ae">Contrasena incorrecta.</p>
+<button class="btnp" id="btnLogin">Ingresar</button>
+<p style="font-size:11px;color:var(--txt2);margin-top:9px">Contrasena: <b>LSTGC2026</b></p>
+</div></div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="vA" class="view">
+<div class="hdr"><div class="hdr-i"><div class="logo">Genomma Lab &middot; <b>Admin RH</b></div><div class="hbtns"><button class="hbtn" id="btnSalirAdmin">Salir</button><button class="hbtn" id="btnRefresh">Actualizar</button></div></div></div>
+<div class="wrap">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+<div><h2 style="font-size:18px;font-weight:700;color:var(--navy)">Panel de Resultados 360</h2><p style="font-size:12px;color:var(--txt2)">Ciclo 1 &middot; Tiempo real desde SharePoint &middot; <span id="spb"></span></p></div>
+<button class="btnp" style="width:auto;padding:8px 16px;font-size:12px" id="btnCSV">Exportar CSV</button>
+</div>
+<div class="ast" id="as"></div>
+<div class="card"><div class="card-t">Lideres evaluados</div><div class="ltw"><table class="lt" id="lt"></table></div></div>
+<div class="card" id="hmc" style="display:none">
+<div class="card-t">Mapa de calor &mdash; Competencias x Lideres</div>
+<div id="hmb"></div>
+<div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+<div style="display:flex;align-items:center;gap:4px;font-size:11px"><div style="width:11px;height:11px;border-radius:3px;background:#EF4444"></div>Inicial</div>
+<div style="display:flex;align-items:center;gap:4px;font-size:11px"><div style="width:11px;height:11px;border-radius:3px;background:#F59E0B"></div>En desarrollo</div>
+<div style="display:flex;align-items:center;gap:4px;font-size:11px"><div style="width:11px;height:11px;border-radius:3px;background:#3B82F6"></div>Solido</div>
+<div style="display:flex;align-items:center;gap:4px;font-size:11px"><div style="width:11px;height:11px;border-radius:3px;background:#10B981"></div>Referente</div>
+</div>
+</div>
+<div class="dp" id="dp"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div class="card-t" id="dt"></div><button class="btns" style="padding:5px 10px;font-size:11px" id="btnCerrarDet">Cerrar</button></div><div id="db"></div></div>
+<div id="ea" style="text-align:center;padding:36px;color:var(--txt2);display:none"><div style="font-size:40px;margin-bottom:8px">&#x1F4ED;</div><p style="font-size:14px;font-weight:600">Sin evaluaciones en SharePoint aun</p><p style="font-size:12px;margin-top:4px">Las evaluaciones enviadas apareceran aqui automaticamente.</p></div>
+</div>
+</div>
+
+<script>
+(function() {
+'use strict';
+
+// =============================================
+// CONFIGURACION
+// =============================================
+var SP_SITE = 'https://genommalabinternacional.sharepoint.com/sites/AgentesGEMCOL';
+var SP_LIST = 'Evaluacion360';
+var ADMIN_PWD = 'LSTGC2026';
+// =============================================
+
+var SP_API = SP_SITE + '/_api/web/lists/getbytitle(\'' + SP_LIST + '\')/items';
+
+var ROLES = {
+  auto:  {label:'Autoevaluacion', color:'#8B5CF6', bg:'#F5F3FF', dot:'#8B5CF6'},
+  jefe:  {label:'Jefe Inmediato', color:'#0F1F3D', bg:'#EEF2FF', dot:'#0F1F3D'},
+  par:   {label:'Par / Colega',   color:'#0EA5E9', bg:'#E0F2FE', dot:'#0EA5E9'},
+  colab: {label:'Colaborador',    color:'#D97706', bg:'#FEF9C3', dot:'#F59E0B'}
+};
+
+var COMPS = [
+  {id:1, key:'envision',       name:'Envision',       full:'Envision (Visualizar)',  sc:'Envision',              desc:'Crea y comunica una vision de futuro clara.',
+   items:['Articula una vision clara del futuro de su area/equipo y la conecta con la estrategia del negocio.','Toma decisiones basadas en principios y prioridades estrategicas, no solo en la urgencia del dia a dia.','Fomenta la innovacion y el benchmarking para anticipar cambios del entorno.','Involucra al equipo en la construccion de la vision, generando sentido de pertenencia.']},
+  {id:2, key:'enable',         name:'Enable',         full:'Enable (Habilitar)',     sc:'Enable',                desc:'Desarrolla capacidades propias y de otros.',
+   items:['Delega responsabilidades con claridad, dando autonomia real a su equipo.','Invierte tiempo regular en desarrollar a sus colaboradores (coaching, feedback, mentoria).','Identifica y potencia las fortalezas individuales de su equipo.','Construye capacidades organizacionales, no solo resuelve problemas del dia a dia.']},
+  {id:3, key:'engage',         name:'Engage',         full:'Engage (Involucrar)',    sc:'Engage',                desc:'Construye relaciones de confianza.',
+   items:['Escucha activamente y se comunica de forma transparente, incluso en temas dificiles.','Resuelve conflictos de manera constructiva, sin evitarlos ni escalarlos innecesariamente.','Colabora efectivamente con otras areas/funciones para lograr objetivos comunes.','Cumple los compromisos que adquiere con su equipo y otros grupos de interes.']},
+  {id:4, key:'execute',        name:'Execute',        full:'Execute (Ejecutar)',     sc:'Execute',               desc:'Traduce la estrategia en planes concretos.',
+   items:['Define prioridades claras y las comunica de forma que el equipo sabe que es lo mas importante.','Se involucra personalmente en el detalle operativo cuando la situacion lo requiere.','Actua con disciplina y rigor en los procesos y estandares de trabajo, de forma consistente.','Anticipa riesgos y toma decisiones oportunas para ajustar el plan antes de que se conviertan en problemas.']},
+  {id:5, key:'energize',       name:'Energize',       full:'Energize (Energizar)',   sc:'Energize',              desc:'Inspira y sostiene el compromiso del equipo.',
+   items:['Demuestra entusiasmo genuino que contagia al equipo, incluso en momentos dificiles.','Reconoce los logros del equipo de forma oportuna y especifica.','Es coherente entre lo que dice y lo que hace (modela los valores de la compania).','Se adapta y aprende de los errores, sin buscar culpables.']},
+  {id:6, key:'entrepreneurship',name:'Emprendedor',   full:'Espiritu Emprendedor',   sc:'Emprendedor',           desc:'Desafia el estatus quo y transforma problemas.',
+   items:['Muestra seguridad y coraje frente a retos, confrontaciones o situaciones dificiles.','Se recupera rapidamente ante los obstaculos, sin perder el enfoque ni la energia.','Desafia el estatus quo y propone iniciativas basadas en un analisis del contexto interno y externo.','Transforma problemas en oportunidades concretas para el logro de objetivos.']},
+  {id:7, key:'emotional',      name:'Int.Emocional',  full:'Inteligencia Emocional', sc:'InteligenciaEmocional', desc:'Reconoce y gestiona emociones con autocontrol.',
+   items:['Reconoce sus propias emociones y su impacto en su forma de liderar.','Mantiene la calma y la claridad en situaciones de presion o conflicto.','Muestra empatia genuina ante las preocupaciones o dificultades del equipo.','Adapta su estilo de liderazgo segun las necesidades de cada persona o situacion.']}
+];
+
+var curRole = null, ans = {}, sessions = [], curCode = null, adData = [], _bc = {};
+
+// --- UTILS ---
+function lvl(s) {
+  if (s >= 3.5) return {l:'Referente',    c:'#10B981', b2:'#ECFDF5', cc:'c-ref', bc:'b-ref', hm:'bg-ref'};
+  if (s >= 2.5) return {l:'Solido',        c:'#2563EB', b2:'#EFF6FF', cc:'c-sol', bc:'b-sol', hm:'bg-sol'};
+  if (s >= 1.5) return {l:'En desarrollo', c:'#D97706', b2:'#FFFBEB', cc:'c-des', bc:'b-des', hm:'bg-des'};
+  return               {l:'Inicial',       c:'#EF4444', b2:'#FEF2F2', cc:'c-ini', bc:'b-ini', hm:'bg-ini'};
+}
+function gc(n) {
+  var ini = (n || 'GL').trim().split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2) || 'GL';
+  return ini + '-' + Math.floor(100 + Math.random() * 900);
+}
+function csa(a) {
+  return COMPS.map(function(c, ci) {
+    var s = c.items.map(function(_, ii) {
+      var v = a['c' + ci + '_i' + ii];
+      return (v && v !== 'NA') ? parseInt(v) : null;
+    }).filter(function(v){return v !== null;});
+    var avg = s.length ? +(s.reduce(function(a,b){return a+b;},0) / s.length).toFixed(3) : 0;
+    return {id:c.id, key:c.key, name:c.name, full:c.full, sc:c.sc, avg:avg};
+  });
+}
+function gav(cs) {
+  return +(cs.reduce(function(s,c){return s+c.avg;},0) / cs.length).toFixed(3);
+}
+function goV(id) {
+  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function showToast(m, t) {
+  var el = document.getElementById('toast');
+  el.textContent = m;
+  el.className = 'toast ' + (t || 'ok') + ' show';
+  setTimeout(function(){el.classList.remove('show');}, 4000);
+}
+function showL(m) {
+  document.getElementById('lmsg').textContent = m || 'Procesando...';
+  document.getElementById('ld').classList.add('on');
+}
+function hideL() { document.getElementById('ld').classList.remove('on'); }
+
+// --- SHAREPOINT ---
+async function getDigest() {
+  var r = await fetch(SP_SITE + '/_api/contextinfo', {
+    method: 'POST',
+    headers: {'Accept':'application/json;odata=verbose','Content-Type':'application/json;odata=verbose'},
+    credentials: 'include'
+  });
+  var d = await r.json();
+  return d.d.GetContextWebInformation.FormDigestValue;
+}
+async function spGet(url) {
+  var r = await fetch(url, {headers:{'Accept':'application/json;odata=verbose'}, credentials:'include'});
+  if (!r.ok) throw new Error('SP GET ' + r.status);
+  return r.json();
+}
+async function spPost(url, body) {
+  var dg = await getDigest();
+  var r = await fetch(url, {
+    method: 'POST',
+    headers: {'Accept':'application/json;odata=verbose','Content-Type':'application/json;odata=verbose','X-RequestDigest':dg},
+    credentials: 'include',
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error('SP POST ' + r.status);
+  return r.status === 204 ? null : r.json();
+}
+async function saveToSP(ev) {
+  var body = {
+    '__metadata': {'type':'SP.Data.Evaluacion360ListItem'},
+    'Title': ev.code, 'Codigo': ev.code,
+    'NombreLider': ev.nL, 'NivelLider': ev.nvL,
+    'CargoLider': ev.cL || '', 'AreaLider': ev.aL || '',
+    'Rol': ev.role, 'NombreEvaluador': ev.en,
+    'Envision': ev.cs[0].avg, 'Enable': ev.cs[1].avg,
+    'Engage': ev.cs[2].avg, 'Execute': ev.cs[3].avg,
+    'Energize': ev.cs[4].avg, 'Emprendedor': ev.cs[5].avg,
+    'InteligenciaEmocional': ev.cs[6].avg, 'PromedioGlobal': ev.g,
+    'Abierta1': ev.o1 || '', 'Abierta2': ev.o2 || '',
+    'FechaEval': new Date().toLocaleDateString('es-CO')
+  };
+  return spPost(SP_API, body);
+}
+async function loadSP() {
+  var url = SP_API + '?$select=Codigo,NombreLider,NivelLider,CargoLider,AreaLider,Rol,NombreEvaluador,Envision,Enable,Engage,Execute,Energize,Emprendedor,InteligenciaEmocional,PromedioGlobal,Abierta1,Abierta2,FechaEval&$orderby=Created%20desc&$top=500';
+  var d = await spGet(url);
+  return d.d.results;
+}
+
+// --- LANDING ---
+function onLC() {
+  var n = document.getElementById('lN').value.trim();
+  var nv = document.getElementById('lNv').value;
+  if (n && nv) {
+    if (!curCode) curCode = gc(n);
+    document.getElementById('cv').textContent = curCode;
+    document.getElementById('cb').style.display = 'block';
+  } else {
+    document.getElementById('cb').style.display = 'none';
+    curCode = null;
+  }
+  usb();
+}
+function selR(r) {
+  curRole = r;
+  document.querySelectorAll('.rc').forEach(function(c){c.classList.remove('sel');});
+  document.getElementById('rc_' + r).classList.add('sel');
+  var notes = {
+    auto:  'Te evaluaras a ti mismo. Esta informacion es estrictamente confidencial.',
+    jefe:  'Tu perspectiva como jefe directo es clave para el desarrollo de este lider.',
+    par:   'Evalua basandote en comportamientos que has observado directamente.',
+    colab: 'Tu opinion es fundamental y esta evaluacion es completamente confidencial.'
+  };
+  document.getElementById('rn').textContent = notes[r];
+  document.getElementById('rn').style.display = 'block';
+  document.getElementById('ce').style.display = r === 'auto' ? 'none' : 'block';
+  usb();
+}
+function usb() {
+  var l = document.getElementById('lN').value.trim();
+  var nv = document.getElementById('lNv').value;
+  var cok = curRole === 'auto' || (
+    document.getElementById('ci').value.trim().length >= 4 &&
+    document.getElementById('en').value.trim().length > 0
+  );
+  document.getElementById('bs').disabled = !(l && nv && curRole && cok);
+}
+function startF() {
+  ans = {};
+  if (curRole !== 'auto') curCode = document.getElementById('ci').value.trim().toUpperCase();
+  buildF();
+  goV('vF');
+  updP();
+}
+
+// --- FORM ---
+function buildF() {
+  var role = ROLES[curRole];
+  var lider = document.getElementById('lN').value;
+  var nivel = document.getElementById('lNv').value;
+  var badge = document.getElementById('fb');
+  badge.textContent = role.label;
+  badge.style.background = role.bg;
+  badge.style.color = role.color;
+  document.getElementById('ft').textContent = 'Evaluacion 360 - ' + lider;
+  document.getElementById('fs').textContent = 'Nivel ' + nivel + ' - ' + role.label;
+  document.getElementById('fc').textContent = 'Codigo: ' + curCode;
+  document.getElementById('q1').textContent = '1. Que deberia ' + lider + ' seguir haciendo porque le esta funcionando muy bien?';
+  document.getElementById('q2').textContent = '2. Que deberia ' + lider + ' empezar o dejar de hacer para ser un lider aun mas efectivo?';
+
+  var container = document.getElementById('cc');
+  container.innerHTML = '';
+
+  COMPS.forEach(function(comp, ci) {
+    var card = document.createElement('div');
+    card.className = 'scard';
+
+    var shdr = document.createElement('div');
+    shdr.className = 'shdr';
+    var cn = document.createElement('div');
+    cn.className = 'cn';
+    cn.textContent = comp.id;
+    var info = document.createElement('div');
+    info.style.flex = '1';
+    var cname = document.createElement('div');
+    cname.className = 'cname';
+    cname.textContent = comp.full;
+    var cdesc = document.createElement('div');
+    cdesc.className = 'cdesc';
+    cdesc.textContent = comp.desc;
+    info.appendChild(cname);
+    info.appendChild(cdesc);
+    var pill = document.createElement('div');
+    pill.className = 'cpill';
+    pill.id = 'pill_' + comp.key;
+    pill.textContent = '- / 4';
+    shdr.appendChild(cn);
+    shdr.appendChild(info);
+    shdr.appendChild(pill);
+    card.appendChild(shdr);
+
+    comp.items.forEach(function(item, ii) {
+      var key = 'c' + ci + '_i' + ii;
+      var row = document.createElement('div');
+      row.className = 'irow';
+
+      var inum = document.createElement('div');
+      inum.className = 'inum';
+      inum.textContent = (ii + 1) + '.';
+
+      var itext = document.createElement('div');
+      itext.className = 'itext';
+      itext.textContent = item;
+
+      var rg = document.createElement('div');
+      rg.className = 'rg';
+      rg.id = 'rg_' + key;
+
+      ['1','2','3','4','NA'].forEach(function(v) {
+        var btn = document.createElement('button');
+        btn.className = 'rb';
+        btn.textContent = v;
+        btn.dataset.key = key;
+        btn.dataset.val = v;
+        rg.appendChild(btn);
+      });
+
+      row.appendChild(inum);
+      row.appendChild(itext);
+      row.appendChild(rg);
+      card.appendChild(row);
+    });
+
+    container.appendChild(card);
+  });
+
+  // Event delegation on container
+  container.addEventListener('click', function(e) {
+    var btn = e.target.closest('.rb');
+    if (!btn) return;
+    var key = btn.dataset.key;
+    var val = btn.dataset.val;
+    if (!key || !val) return;
+    ans[key] = val;
+    var rg = document.getElementById('rg_' + key);
+    rg.querySelectorAll('.rb').forEach(function(b) {
+      b.className = 'rb';
+      if (b.dataset.val === val) b.classList.add('s' + (val === 'NA' ? 'na' : val));
+    });
+    updP();
+    updPill(key);
+  });
+}
+
+function updP() {
+  var total = COMPS.reduce(function(s,c){return s+c.items.length;},0);
+  var a = Object.keys(ans).length;
+  var pct = Math.round((a / total) * 100);
+  document.getElementById('pb').style.width = pct + '%';
+  document.getElementById('pl').textContent = a + ' de ' + total + ' indicadores respondidos';
+}
+
+function updPill(key) {
+  var ci = parseInt(key.split('_')[0].replace('c',''));
+  var comp = COMPS[ci];
+  var scores = comp.items.map(function(_, ii) {
+    var v = ans['c' + ci + '_i' + ii];
+    return (v && v !== 'NA') ? parseInt(v) : null;
+  }).filter(function(v){return v !== null;});
+  var pill = document.getElementById('pill_' + comp.key);
+  if (!scores.length) { pill.textContent = '- / 4'; pill.style.background = ''; pill.style.color = ''; return; }
+  var avg = scores.reduce(function(a,b){return a+b;},0) / scores.length;
+  var info = lvl(avg);
+  pill.textContent = avg.toFixed(1) + ' / 4';
+  pill.style.background = info.b2;
+  pill.style.color = info.c;
+}
+
+async function subE() {
+  var total = COMPS.reduce(function(s,c){return s+c.items.length;},0);
+  if (Object.keys(ans).length < total) {
+    var m = document.getElementById('vm');
+    m.style.display = 'block';
+    setTimeout(function(){m.style.display='none';}, 4000);
+    return;
+  }
+  var evalName = curRole === 'auto' ? document.getElementById('lN').value : (document.getElementById('en').value || 'Evaluador');
+  var cs = csa(ans);
+  var g = gav(cs);
+  var ev = {
+    code: curCode, role: curRole, roleName: ROLES[curRole].label, en: evalName,
+    nL: document.getElementById('lN').value, nvL: document.getElementById('lNv').value,
+    cL: document.getElementById('lC').value, aL: document.getElementById('lA').value,
+    cs: cs, g: g,
+    o1: document.getElementById('o1').value, o2: document.getElementById('o2').value,
+    ts: new Date().toLocaleTimeString('es-CO', {hour:'2-digit', minute:'2-digit'})
+  };
+  showL('Guardando en SharePoint...');
+  try {
+    await saveToSP(ev);
+    showToast('Evaluacion guardada en SharePoint', 'ok');
+  } catch(e) {
+    console.warn('SP error:', e.message);
+    showToast('Modo local - SharePoint no disponible en este contexto', 'err');
+  }
+  hideL();
+  sessions.push(JSON.parse(JSON.stringify(ev)));
+  document.getElementById('o1').value = '';
+  document.getElementById('o2').value = '';
+  showRes();
+}
+
+// --- RESULTS ---
+function showRes() {
+  goV('vR');
+  var lider = document.getElementById('lN').value;
+  var nivel = document.getElementById('lNv').value;
+  var cargo = document.getElementById('lC').value;
+  var ac = COMPS.map(function(_, ci) {
+    var v = sessions.map(function(s){return s.cs[ci].avg;}).filter(function(v){return v>0;});
+    return v.length ? v.reduce(function(a,b){return a+b;},0)/v.length : 0;
+  });
+  var g = ac.reduce(function(a,b){return a+b;},0)/ac.length;
+  var gi = lvl(g);
+  document.getElementById('rh').innerHTML =
+    '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:3px">EVALUACION 360 - ' + new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'}) + '</div>' +
+    '<h2>' + lider + '</h2>' +
+    '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:2px">' + (cargo ? cargo + ' - ' : '') + 'Nivel ' + nivel + '</div>' +
+    '<div class="sbig">' + g.toFixed(2) + '</div>' +
+    '<div class="slv ' + gi.cc + '">' + gi.l + '</div>' +
+    '<div style="display:inline-block;background:rgba(0,169,157,.2);border:1px solid rgba(0,169,157,.4);color:#5EEAD4;font-size:12px;font-weight:700;letter-spacing:.1em;padding:2px 9px;border-radius:20px;margin-top:7px">' + curCode + '</div>' +
+    '<div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:4px">' + sessions.length + ' evaluacion(es) - Guardado en SharePoint</div>';
+
+  var sl = document.getElementById('sl');
+  sl.innerHTML = '';
+  sessions.forEach(function(s) {
+    var r = ROLES[s.role], gi2 = lvl(s.g);
+    var d = document.createElement('div');
+    d.className = 'si';
+    d.innerHTML = '<div class="sil"><div class="sd" style="background:' + r.dot + '"></div><div><div class="sn">' + s.en + '</div><div class="sr">' + s.roleName + ' - ' + s.ts + '</div></div></div><div class="ss ' + gi2.cc + '">' + s.g.toFixed(2) + '</div>';
+    sl.appendChild(d);
+  });
+
+  bldTabs();
+  rnTab(sessions.length > 1 ? 'all' : sessions[0].role + '_0');
+  if (sessions.length > 1) bldST(); else document.getElementById('sc').style.display = 'none';
+}
+
+function bldTabs() {
+  var tr = document.getElementById('tr');
+  tr.innerHTML = '';
+  if (sessions.length > 1) {
+    var b = document.createElement('button');
+    b.className = 'tb a';
+    b.textContent = 'Consolidado';
+    b.dataset.tab = 'all';
+    tr.appendChild(b);
+  }
+  sessions.forEach(function(s, i) {
+    var r = ROLES[s.role];
+    var b = document.createElement('button');
+    b.className = 'tb' + (sessions.length === 1 ? ' a' : '');
+    b.textContent = s.roleName;
+    b.style.color = r.color;
+    b.dataset.tab = s.role + '_' + i;
+    tr.appendChild(b);
+  });
+  tr.addEventListener('click', function(e) {
+    var btn = e.target.closest('.tb');
+    if (!btn) return;
+    tr.querySelectorAll('.tb').forEach(function(b){b.classList.remove('a');});
+    btn.classList.add('a');
+    rnTab(btn.dataset.tab);
+  });
+}
+
+function rnTab(tk) {
+  var data;
+  if (tk === 'all') {
+    data = COMPS.map(function(c, ci) {
+      var v = sessions.map(function(s){return s.cs[ci].avg;}).filter(function(v){return v>0;});
+      var avg = v.length ? v.reduce(function(a,b){return a+b;},0)/v.length : 0;
+      return {name:c.name, full:c.full, avg:avg};
+    });
+  } else {
+    var idx = parseInt(tk.split('_')[1]);
+    data = sessions[idx].cs.map(function(c){return {name:c.name||COMPS.find(function(x){return x.key===c.key;})||{}, full:COMPS.find(function(x){return x.key===c.key;}).full, avg:c.avg};});
+  }
+  drawR(data, tk === 'all' ? null : ROLES[tk.split('_')[0]] && ROLES[tk.split('_')[0]].color);
+
+  var grid = document.getElementById('cg');
+  grid.innerHTML = '';
+  data.forEach(function(comp) {
+    var info = lvl(comp.avg), pct = (comp.avg / 4) * 100;
+    var d = document.createElement('div');
+    d.className = 'cr';
+    d.innerHTML = '<div class="crt"><div class="crn">' + comp.full + '</div><div class="cra ' + info.cc + '">' + comp.avg.toFixed(2) + '</div></div><div class="crb"><div class="crf ' + info.bc + '" style="width:0%" data-p="' + pct + '"></div></div><div class="crl ' + info.cc + '">' + info.l + '</div>';
+    grid.appendChild(d);
+  });
+  setTimeout(function(){document.querySelectorAll('.crf').forEach(function(el){el.style.width=el.dataset.p+'%';});}, 80);
+
+  var oc = document.getElementById('oc'), ob = document.getElementById('ob');
+  if (tk !== 'all') {
+    var idx = parseInt(tk.split('_')[1]), s = sessions[idx];
+    if (s.o1 || s.o2) {
+      oc.style.display = 'block';
+      ob.innerHTML = (s.o1 ? '<div class="oa"><span class="oal">Seguir haciendo</span><p>' + s.o1 + '</p></div>' : '') +
+                     (s.o2 ? '<div class="oa"><span class="oal">Empezar o dejar de hacer</span><p>' + s.o2 + '</p></div>' : '');
+    } else oc.style.display = 'none';
+  } else {
+    var hp = sessions.some(function(s){return s.o1||s.o2;});
+    oc.style.display = hp ? 'block' : 'none';
+    if (hp) ob.innerHTML = sessions.filter(function(s){return s.o1||s.o2;}).map(function(s){
+      return '<div style="margin-bottom:10px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:' + ROLES[s.role].color + ';margin-bottom:4px">' + s.roleName + ' - ' + s.en + '</div>' +
+        (s.o1 ? '<div class="oa"><span class="oal">Seguir haciendo</span><p>' + s.o1 + '</p></div>' : '') +
+        (s.o2 ? '<div class="oa"><span class="oal">Empezar o dejar de hacer</span><p>' + s.o2 + '</p></div>' : '') + '</div>';
+    }).join('');
+  }
+}
+
+function bldST() {
+  document.getElementById('sc').style.display = 'block';
+  var t = document.getElementById('stbl');
+  t.innerHTML = '<thead><tr><th>Competencia</th>' +
+    sessions.map(function(s){return '<th><span class="sc" style="background:'+ROLES[s.role].bg+';color:'+ROLES[s.role].color+'">'+s.roleName+'</span></th>';}).join('') +
+    '<th>Promedio 360</th></tr></thead><tbody>' +
+    COMPS.map(function(_, ci) {
+      var vals = sessions.map(function(s){return s.cs[ci].avg;});
+      var avg = vals.reduce(function(a,b){return a+b;},0)/vals.length;
+      var ri = lvl(avg);
+      return '<tr><td style="font-weight:600;font-size:12px">' + COMPS[ci].full + '</td>' +
+        vals.map(function(v){return '<td class="'+lvl(v).cc+'" style="font-weight:600">'+v.toFixed(2)+'</td>';}).join('') +
+        '<td><strong class="'+ri.cc+'">'+avg.toFixed(2)+'</strong> <span style="font-size:10px;color:'+ri.c+'">'+ri.l+'</span></td></tr>';
+    }).join('') + '</tbody>';
+}
+
+function drawR(cd, accent) {
+  var canvas = document.getElementById('rc'), ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height, cx = W/2, cy = H/2+6;
+  var R = Math.min(W,H)/2-56, N = cd.length;
+  var scores = cd.map(function(c){return c.avg;});
+  var ac = accent || '#00A99D';
+  ctx.clearRect(0,0,W,H);
+  [1,2,3,4].forEach(function(lv) {
+    var r = (lv/4)*R;
+    ctx.beginPath();
+    for (var i=0;i<=N;i++){var a=(i/N)*2*Math.PI-Math.PI/2;i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}
+    ctx.closePath();
+    ctx.strokeStyle = lv===4?'#CBD5E1':'#E2E8F0'; ctx.lineWidth=lv===4?1.5:1; ctx.stroke();
+    ctx.fillStyle='#94A3B8'; ctx.font='11px Arial'; ctx.textAlign='left';
+    ctx.fillText(lv, cx+r+3, cy+4);
+  });
+  for (var i=0;i<N;i++){var a=(i/N)*2*Math.PI-Math.PI/2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));ctx.strokeStyle='#E2E8F0';ctx.lineWidth=1;ctx.stroke();}
+  ctx.beginPath();
+  for (var i=0;i<=N;i++){var ii=i%N,a=(ii/N)*2*Math.PI-Math.PI/2,r=(scores[ii]/4)*R;i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}
+  ctx.closePath(); ctx.fillStyle=ac+'25'; ctx.fill(); ctx.strokeStyle=ac; ctx.lineWidth=2.5; ctx.stroke();
+  for (var i=0;i<N;i++){var a=(i/N)*2*Math.PI-Math.PI/2,r=(scores[i]/4)*R;ctx.beginPath();ctx.arc(cx+r*Math.cos(a),cy+r*Math.sin(a),5,0,2*Math.PI);ctx.fillStyle=ac;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();}
+  ctx.font='bold 11px Arial';
+  for (var i=0;i<N;i++){
+    var a=(i/N)*2*Math.PI-Math.PI/2,lx=cx+(R+36)*Math.cos(a),ly=cy+(R+36)*Math.sin(a);
+    ctx.fillStyle='#0F1F3D'; ctx.textAlign=Math.abs(lx-cx)<10?'center':lx<cx?'right':'left';
+    ctx.textBaseline=ly<cy?'bottom':ly>cy?'top':'middle';
+    ctx.fillText(cd[i].name,lx,ly);
+    ctx.font='11px Arial'; ctx.fillStyle=ac;
+    ctx.fillText(scores[i].toFixed(1),lx,ly+(ly<cy?-2:12));
+    ctx.font='bold 11px Arial'; ctx.fillStyle='#0F1F3D';
+  }
+}
+
+function addEv() {
+  ans={}; curRole=null; curCode=null;
+  document.querySelectorAll('.rc').forEach(function(c){c.classList.remove('sel');});
+  document.getElementById('rn').style.display='none';
+  document.getElementById('ce').style.display='none';
+  document.getElementById('cb').style.display='none';
+  document.getElementById('ci').value='';
+  document.getElementById('en').value='';
+  document.getElementById('bs').disabled=true;
+  goV('vL');
+}
+function fReset() {
+  sessions=[];addEv();
+  ['lN','lC','lA'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('lNv').value='';
+}
+
+// --- ADMIN ---
+async function loadAD() {
+  showL('Cargando datos desde SharePoint...');
+  try {
+    var items = await loadSP();
+    adData = items;
+    rnAdmin(items);
+    document.getElementById('spb').innerHTML = '<span style="background:#ECFDF5;color:#065F46;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:600">OK Conectado</span>';
+    showToast(items.length + ' evaluaciones cargadas', 'ok');
+  } catch(e) {
+    console.warn('SP error:', e.message);
+    document.getElementById('spb').innerHTML = '<span style="background:#FEF2F2;color:#991B1B;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:600">Sin conexion SP</span>';
+    showToast('No se pudo conectar. Verifica que la lista exista.', 'err');
+    document.getElementById('ea').style.display='block';
+  }
+  hideL();
+}
+
+function rnAdmin(items) {
+  if (!items || !items.length) {
+    document.getElementById('ea').style.display='block';
+    document.getElementById('as').innerHTML='';
+    document.getElementById('lt').innerHTML='';
+    document.getElementById('hmc').style.display='none';
+    return;
+  }
+  document.getElementById('ea').style.display='none';
+  _bc = {};
+  items.forEach(function(item) {
+    var code = item.Codigo || item.Title || 'SIN-CODIGO';
+    if (!_bc[code]) _bc[code] = {lider:{n:item.NombreLider,nv:item.NivelLider,c:item.CargoLider,a:item.AreaLider}, ev:[]};
+    _bc[code].ev.push(item);
+  });
+  var codes = Object.keys(_bc), total = items.length;
+  var allG = items.map(function(i){return parseFloat(i.PromedioGlobal)||0;}).filter(function(v){return v>0;});
+  var avgG = allG.length ? allG.reduce(function(a,b){return a+b;},0)/allG.length : 0;
+  var comp = codes.filter(function(c){return new Set(_bc[c].ev.map(function(e){return e.Rol;})).size>=4;}).length;
+  document.getElementById('as').innerHTML =
+    '<div class="asc"><div class="asn">'+codes.length+'</div><div class="asl">Lideres</div></div>' +
+    '<div class="asc"><div class="asn">'+total+'</div><div class="asl">Evaluaciones</div></div>' +
+    '<div class="asc"><div class="asn '+lvl(avgG).cc+'">'+avgG.toFixed(2)+'</div><div class="asl">Promedio equipo</div></div>' +
+    '<div class="asc"><div class="asn">'+comp+'</div><div class="asl">360 completos</div></div>';
+
+  var ri = {auto:'A',jefe:'J',par:'P',colab:'C'};
+  var tbody = codes.map(function(code) {
+    var e=_bc[code],ev=e.ev;
+    var avgs=ev.map(function(x){return parseFloat(x.PromedioGlobal)||0;}).filter(function(v){return v>0;});
+    var avg=avgs.length?avgs.reduce(function(a,b){return a+b;},0)/avgs.length:0, li=lvl(avg);
+    var roles=new Set(ev.map(function(x){return x.Rol;})), pct=Math.min(100,(ev.length/4)*100);
+    var rs=['auto','jefe','par','colab'].map(function(r){return roles.has(r)?'<b title="'+ROLES[r].label+'">'+ri[r]+'</b>':'<span style="opacity:.2">o</span>';}).join(' ');
+    return '<tr><td class="lc">'+code+'</td>' +
+      '<td><strong>'+(e.lider.n||'-')+'</strong><br><span style="font-size:11px;color:var(--txt2)">'+(e.lider.c||'')+'</span></td>' +
+      '<td>'+(e.lider.nv||'-')+'</td>' +
+      '<td>'+ev.length+'/4<div class="pm"><div class="pmf b-'+(pct>=100?'ref':pct>=50?'sol':'des')+'" style="width:'+pct+'%"></div></div></td>' +
+      '<td>'+rs+'</td>' +
+      '<td class="'+li.cc+'" style="font-weight:700;font-size:13px">'+(avg>0?avg.toFixed(2):'-')+'</td>' +
+      '<td><span style="font-size:11px;font-weight:600;color:'+li.c+'">'+(avg>0?li.l:'Sin datos')+'</span></td>' +
+      '<td><button class="bv" data-code="'+code+'">Ver</button></td></tr>';
+  }).join('');
+  document.getElementById('lt').innerHTML = '<thead><tr><th>Codigo</th><th>Lider</th><th>Nivel</th><th>Progreso</th><th>Fuentes</th><th>Promedio</th><th>Nivel</th><th></th></tr></thead><tbody>' + tbody + '</tbody>';
+
+  document.getElementById('lt').addEventListener('click', function(e) {
+    var btn = e.target.closest('.bv');
+    if (!btn) return;
+    showDet(btn.dataset.code);
+  });
+
+  if (codes.length > 1) {
+    document.getElementById('hmc').style.display='block';
+    var cols=['Envision','Enable','Engage','Execute','Energize','Emprendedor','InteligenciaEmocional'],sh=['Env','Ena','Eng','Exe','Ene','Emp','IE'];
+    document.getElementById('hmb').innerHTML =
+      '<div class="hrow"><div class="hl" style="font-size:9px;font-weight:700;text-transform:uppercase">Lider</div><div class="hcs">'+sh.map(function(n){return'<div class="hh">'+n+'</div>';}).join('')+'</div></div>' +
+      codes.map(function(code) {
+        var e=_bc[code];if(!e.ev.length)return'';
+        var avgs=cols.map(function(col){var v=e.ev.map(function(x){return parseFloat(x[col])||0;}).filter(function(v){return v>0;});return v.length?v.reduce(function(a,b){return a+b;},0)/v.length:0;});
+        return '<div class="hrow"><div class="hl" title="'+(e.lider.n||'')+'">'+(e.lider.n||'-').split(' ')[0]+'</div><div class="hcs">'+avgs.map(function(v){return'<div class="hc '+lvl(v).hm+'">'+(v>0?v.toFixed(1):'-')+'</div>';}).join('')+'</div></div>';
+      }).join('');
+  } else document.getElementById('hmc').style.display='none';
+}
+
+function showDet(code) {
+  var entry = _bc[code];
+  document.getElementById('dt').textContent = 'Detalle - ' + entry.lider.n + ' (' + code + ')';
+  document.getElementById('dp').style.display='block';
+  var ev=entry.ev;
+  if (!ev.length) {document.getElementById('db').innerHTML='<p>Sin evaluaciones.</p>';return;}
+  var cols=['Envision','Enable','Engage','Execute','Energize','Emprendedor','InteligenciaEmocional'];
+  var rh=ev.map(function(e){return'<th><span class="sc" style="background:'+(ROLES[e.Rol]&&ROLES[e.Rol].bg||'#eee')+';color:'+(ROLES[e.Rol]&&ROLES[e.Rol].color||'#333')+'">'+(ROLES[e.Rol]&&ROLES[e.Rol].label||e.Rol)+'</span></th>';}).join('');
+  var tbody=COMPS.map(function(comp,ci){var vals=ev.map(function(e){return parseFloat(e[cols[ci]])||0;}),avg=vals.reduce(function(a,b){return a+b;},0)/vals.length,ri=lvl(avg);return'<tr><td style="font-size:12px;font-weight:600">'+comp.full+'</td>'+vals.map(function(v){return'<td class="'+lvl(v).cc+'" style="font-weight:600">'+v.toFixed(2)+'</td>';}).join('')+'<td><strong class="'+ri.cc+'">'+avg.toFixed(2)+'</strong></td></tr>';}).join('');
+  var avgsG=ev.map(function(e){return parseFloat(e.PromedioGlobal)||0;}),gg=avgsG.reduce(function(a,b){return a+b;},0)/avgsG.length,gi=lvl(gg);
+  document.getElementById('db').innerHTML='<div class="stw"><table class="st"><thead><tr><th>Competencia</th>'+rh+'<th>Promedio</th></tr></thead><tbody>'+tbody+'<tr style="font-weight:700;background:#F8FAFC"><td>GLOBAL 360</td>'+avgsG.map(function(v){return'<td class="'+lvl(v).cc+'">'+v.toFixed(2)+'</td>';}).join('')+'<td class="'+gi.cc+'">'+gg.toFixed(2)+' - '+gi.l+'</td></tr></tbody></table></div>';
+  document.getElementById('dp').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function expCSV() {
+  if (!adData.length) {showToast('No hay datos para exportar','err');return;}
+  var h=['Codigo','NombreLider','NivelLider','CargoLider','AreaLider','Rol','NombreEvaluador','Envision','Enable','Engage','Execute','Energize','Emprendedor','InteligenciaEmocional','PromedioGlobal','Abierta1','Abierta2','FechaEval'];
+  var rows=[h.join(',')].concat(adData.map(function(i){return h.map(function(col){return'"'+((i[col]||'').toString().replace(/"/g,'""'))+'"';}).join(',');}));
+  var blob=new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='Evaluaciones360_Genomma.csv';a.click();URL.revokeObjectURL(url);
+  showToast('CSV exportado correctamente','ok');
+}
+
+// --- EVENT LISTENERS (no inline handlers) ---
+document.addEventListener('DOMContentLoaded', function() {
+  // Landing
+  document.getElementById('lN').addEventListener('input', onLC);
+  document.getElementById('lNv').addEventListener('change', onLC);
+  document.getElementById('ci').addEventListener('input', function(){this.value=this.value.toUpperCase();usb();});
+  document.getElementById('en').addEventListener('input', usb);
+  document.getElementById('bs').addEventListener('click', startF);
+  document.getElementById('btnAdmin').addEventListener('click', function(){goV('vAL');});
+  document.querySelectorAll('.rc').forEach(function(el){
+    el.addEventListener('click', function(){selR(this.dataset.role);});
+  });
+  // Form
+  document.getElementById('btnSalir').addEventListener('click', function(){
+    if (confirm('Salir? Perderas las respuestas.')) goV('vL');
+  });
+  document.getElementById('btnEnviar').addEventListener('click', subE);
+  // Results
+  document.getElementById('btnOtra').addEventListener('click', addEv);
+  document.getElementById('btnOtra2').addEventListener('click', addEv);
+  document.getElementById('btnNuevo').addEventListener('click', fReset);
+  document.getElementById('btnNuevo2').addEventListener('click', fReset);
+  document.getElementById('btnPrint').addEventListener('click', function(){window.print();});
+  // Admin login
+  document.getElementById('btnVolverAdmin').addEventListener('click', function(){goV('vL');});
+  document.getElementById('ap').addEventListener('keyup', function(e){if(e.key==='Enter')chkA();});
+  document.getElementById('btnLogin').addEventListener('click', chkA);
+  // Admin dashboard
+  document.getElementById('btnSalirAdmin').addEventListener('click', function(){goV('vL');});
+  document.getElementById('btnRefresh').addEventListener('click', loadAD);
+  document.getElementById('btnCSV').addEventListener('click', expCSV);
+  document.getElementById('btnCerrarDet').addEventListener('click', function(){document.getElementById('dp').style.display='none';});
+});
+
+function chkA() {
+  if (document.getElementById('ap').value === ADMIN_PWD) {
+    document.getElementById('ap').value='';
+    goV('vA');
+    loadAD();
+  } else {
+    document.getElementById('ae').style.display='block';
+    setTimeout(function(){document.getElementById('ae').style.display='none';},3000);
+  }
+}
+
+})();
+</script>
+</body>
+</html>
