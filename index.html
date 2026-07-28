@@ -241,7 +241,7 @@ body{font-family:Arial,sans-serif;background:var(--bg);color:var(--txt);min-heig
 <div class="hdr"><div class="hdr-i"><div class="logo">Genomma Lab &middot; <b>Admin RH</b></div><div class="hbtns"><button class="hbtn" id="btnSalirAdmin">Salir</button><button class="hbtn" id="btnRefresh">Actualizar</button></div></div></div>
 <div class="wrap">
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-<div><h2 style="font-size:18px;font-weight:700;color:var(--navy)">Panel de Resultados 360</h2><p style="font-size:12px;color:var(--txt2)">Ciclo 1 &middot; Tiempo real desde SharePoint &middot; <span id="spb"></span></p></div>
+<div><h2 style="font-size:18px;font-weight:700;color:var(--navy)">Panel de Resultados 360</h2><p style="font-size:12px;color:var(--txt2)">Ciclo 1 &middot; Tiempo real desde Google Sheets &middot; <span id="spb"></span></p></div>
 <button class="btnp" style="width:auto;padding:8px 16px;font-size:12px" id="btnCSV">Exportar CSV</button>
 </div>
 <div class="ast" id="as"></div>
@@ -257,7 +257,7 @@ body{font-family:Arial,sans-serif;background:var(--bg);color:var(--txt);min-heig
 </div>
 </div>
 <div class="dp" id="dp"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div class="card-t" id="dt"></div><button class="btns" style="padding:5px 10px;font-size:11px" id="btnCerrarDet">Cerrar</button></div><div id="db"></div></div>
-<div id="ea" style="text-align:center;padding:36px;color:var(--txt2);display:none"><div style="font-size:40px;margin-bottom:8px">&#x1F4ED;</div><p style="font-size:14px;font-weight:600">Sin evaluaciones en SharePoint aun</p><p style="font-size:12px;margin-top:4px">Las evaluaciones enviadas apareceran aqui automaticamente.</p></div>
+<div id="ea" style="text-align:center;padding:36px;color:var(--txt2);display:none"><div style="font-size:40px;margin-bottom:8px">&#x1F4ED;</div><p style="font-size:14px;font-weight:600">Sin evaluaciones en Google Sheets aun</p><p style="font-size:12px;margin-top:4px">Las evaluaciones enviadas apareceran aqui automaticamente.</p></div>
 </div>
 </div>
 
@@ -268,12 +268,9 @@ body{font-family:Arial,sans-serif;background:var(--bg);color:var(--txt);min-heig
 // =============================================
 // CONFIGURACION
 // =============================================
-var SP_SITE = 'https://genommalabinternacional.sharepoint.com/sites/AgentesGEMCOL';
-var SP_LIST = 'Evaluacion360';
+var GS_URL = 'https://script.google.com/macros/s/AKfycbzMLnsykmrkzZWtiW1YYby70D5Eg8seBegrkx0G2C4jgZ0LPcRHswb3KOr8L7dHzsVL/exec';
 var ADMIN_PWD = 'LSTGC2026';
 // =============================================
-
-var SP_API = SP_SITE + '/_api/web/lists/getbytitle(\'' + SP_LIST + '\')/items';
 
 var ROLES = {
   auto:  {label:'Autoevaluacion', color:'#8B5CF6', bg:'#F5F3FF', dot:'#8B5CF6'},
@@ -343,51 +340,32 @@ function showL(m) {
 function hideL() { document.getElementById('ld').classList.remove('on'); }
 
 // --- SHAREPOINT ---
-async function getDigest() {
-  var r = await fetch(SP_SITE + '/_api/contextinfo', {
-    method: 'POST',
-    headers: {'Accept':'application/json;odata=verbose','Content-Type':'application/json;odata=verbose'},
-    credentials: 'include'
-  });
-  var d = await r.json();
-  return d.d.GetContextWebInformation.FormDigestValue;
-}
-async function spGet(url) {
-  var r = await fetch(url, {headers:{'Accept':'application/json;odata=verbose'}, credentials:'include'});
-  if (!r.ok) throw new Error('SP GET ' + r.status);
-  return r.json();
-}
-async function spPost(url, body) {
-  var dg = await getDigest();
-  var r = await fetch(url, {
-    method: 'POST',
-    headers: {'Accept':'application/json;odata=verbose','Content-Type':'application/json;odata=verbose','X-RequestDigest':dg},
-    credentials: 'include',
-    body: JSON.stringify(body)
-  });
-  if (!r.ok) throw new Error('SP POST ' + r.status);
-  return r.status === 204 ? null : r.json();
-}
+// Google Sheets backend - no SP helpers needed
 async function saveToSP(ev) {
   var body = {
-    '__metadata': {'type':'SP.Data.Evaluacion360ListItem'},
-    'Title': ev.code, 'Codigo': ev.code,
-    'NombreLider': ev.nL, 'NivelLider': ev.nvL,
-    'CargoLider': ev.cL || '', 'AreaLider': ev.aL || '',
-    'Rol': ev.role, 'NombreEvaluador': ev.en,
-    'Envision': ev.cs[0].avg, 'Enable': ev.cs[1].avg,
-    'Engage': ev.cs[2].avg, 'Execute': ev.cs[3].avg,
-    'Energize': ev.cs[4].avg, 'Emprendedor': ev.cs[5].avg,
-    'InteligenciaEmocional': ev.cs[6].avg, 'PromedioGlobal': ev.g,
-    'Abierta1': ev.o1 || '', 'Abierta2': ev.o2 || '',
-    'FechaEval': new Date().toLocaleDateString('es-CO')
+    Codigo: ev.code, NombreLider: ev.nL, NivelLider: ev.nvL,
+    CargoLider: ev.cL || '', AreaLider: ev.aL || '',
+    Rol: ev.role, NombreEvaluador: ev.en,
+    Envision: ev.cs[0].avg, Enable: ev.cs[1].avg,
+    Engage: ev.cs[2].avg, Execute: ev.cs[3].avg,
+    Energize: ev.cs[4].avg, Emprendedor: ev.cs[5].avg,
+    InteligenciaEmocional: ev.cs[6].avg, PromedioGlobal: ev.g,
+    Abierta1: ev.o1 || '', Abierta2: ev.o2 || '',
+    FechaEval: new Date().toLocaleDateString('es-CO')
   };
-  return spPost(SP_API, body);
+  var r = await fetch(GS_URL, {
+    method: 'POST',
+    body: JSON.stringify(body)
+  });
+  var d = await r.json();
+  if (d.status !== 'ok') throw new Error(d.msg || 'Error guardando');
+  return d;
 }
 async function loadSP() {
-  var url = SP_API + '?$select=Codigo,NombreLider,NivelLider,CargoLider,AreaLider,Rol,NombreEvaluador,Envision,Enable,Engage,Execute,Energize,Emprendedor,InteligenciaEmocional,PromedioGlobal,Abierta1,Abierta2,FechaEval&$orderby=Created%20desc&$top=500';
-  var d = await spGet(url);
-  return d.d.results;
+  var r = await fetch(GS_URL);
+  var d = await r.json();
+  if (d.status !== 'ok') throw new Error(d.msg || 'Error cargando');
+  return d.rows;
 }
 
 // --- LANDING ---
@@ -581,10 +559,10 @@ async function subE() {
   showL('Guardando en SharePoint...');
   try {
     await saveToSP(ev);
-    showToast('Evaluacion guardada en SharePoint', 'ok');
+    showToast('Evaluacion guardada en Google Sheets', 'ok');
   } catch(e) {
     console.warn('SP error:', e.message);
-    showToast('Modo local - SharePoint no disponible en este contexto', 'err');
+    showToast('Error al guardar. Verifica conexion.', 'err');
   }
   hideL();
   sessions.push(JSON.parse(JSON.stringify(ev)));
@@ -612,7 +590,7 @@ function showRes() {
     '<div class="sbig">' + g.toFixed(2) + '</div>' +
     '<div class="slv ' + gi.cc + '">' + gi.l + '</div>' +
     '<div style="display:inline-block;background:rgba(0,169,157,.2);border:1px solid rgba(0,169,157,.4);color:#5EEAD4;font-size:12px;font-weight:700;letter-spacing:.1em;padding:2px 9px;border-radius:20px;margin-top:7px">' + curCode + '</div>' +
-    '<div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:4px">' + sessions.length + ' evaluacion(es) - Guardado en SharePoint</div>';
+    '<div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:4px">' + sessions.length + ' evaluacion(es) - Guardado en Google Sheets</div>';
 
   var sl = document.getElementById('sl');
   sl.innerHTML = '';
@@ -774,11 +752,11 @@ async function loadAD() {
     var items = await loadSP();
     adData = items;
     rnAdmin(items);
-    document.getElementById('spb').innerHTML = '<span style="background:#ECFDF5;color:#065F46;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:600">OK Conectado</span>';
+    document.getElementById('spb').innerHTML = '<span style="background:#ECFDF5;color:#065F46;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:600">OK Google Sheets</span>';
     showToast(items.length + ' evaluaciones cargadas', 'ok');
   } catch(e) {
     console.warn('SP error:', e.message);
-    document.getElementById('spb').innerHTML = '<span style="background:#FEF2F2;color:#991B1B;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:600">Sin conexion SP</span>';
+    document.getElementById('spb').innerHTML = '<span style="background:#FEF2F2;color:#991B1B;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:600">Sin conexion GS</span>';
     showToast('No se pudo conectar. Verifica que la lista exista.', 'err');
     document.getElementById('ea').style.display='block';
   }
